@@ -1,5 +1,6 @@
 # coding: utf-8
 
+import sys
 
 from flask import Blueprint, request
 from src import mysql
@@ -11,16 +12,30 @@ users_blueprint = Blueprint('users', __name__)
 @users_blueprint.route("/users/", methods=['GET'])
 @users_blueprint.route("/users/<int:id>", methods=['GET'])
 def get(id=None):
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    res = {}
     if not id:
-        peoples = [{"nome": "Bruno Rocha"},
-               {"nome": "Arjen Lucassen"},
-               {"nome": "Anneke van Giersbergen"},
-               {"nome": "Criança muito á â "},
-               {"nome": "Steven acéntõ"}]
-        return print_json(peoples)
+        cursor.execute("SELECT * FROM users")
+        users = cursor.fetchall()
+        cursor.close()
+
+        if len(users) > 0:
+            for user in users:
+                res[user[0]] = {
+                    'name': user[1]
+                }
     else:
-        conn = mysql.connect()
-        return "User " + str(id)
+        cursor.execute("SELECT * FROM users WHERE id = %d" % id)
+        user = cursor.fetchone()
+        cursor.close()
+
+        if not user:
+            abort(404)
+        res = {
+            'name': user[1]
+        }
+    return print_json(res)
 
 @users_blueprint.route("/users/", methods=['POST'])
 def post():
