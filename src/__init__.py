@@ -18,6 +18,6 @@ from src.blueprints.users import users_blueprint
 app.register_blueprint(users_blueprint)
 
 @app.route("/")
-@app.route('/home')
+@app.route('/home/')
 def home():
     return 'Welcome to the api v1 of Santa Rocha da Misericórdia hospital'

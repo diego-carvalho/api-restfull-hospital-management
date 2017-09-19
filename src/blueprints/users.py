@@ -81,7 +81,6 @@ def delete(id):
     try:
         user = get(id)
         cursor.execute("DELETE FROM users WHERE id=%d" % id)
-        # res = {'response': 'Object is been remove with id = %d!' % id}
         conn.commit()
         cursor.close()
         return user
