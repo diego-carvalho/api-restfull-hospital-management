@@ -8,6 +8,9 @@ from flask import Blueprint, request
 from src import mysql
 from src.functions import print_json
 
+from src.blueprints.phones import getAllByUser as phone_get
+from src.blueprints.address import getAllByUser as address_get
+
 users_blueprint = Blueprint('users', __name__)
 
 @users_blueprint.route("/users/", methods=['GET'])
@@ -23,6 +26,9 @@ def get(id=None):
 
         if len(users) > 0:
             for user in users:
+                phones = phone_get(int(user[0]))
+                address = address_get(int(user[0]))
+
                 res[user[0]] = {
                     'name': user[3],
                     'cpf' : user[4],
@@ -33,7 +39,9 @@ def get(id=None):
                     'nurse' : user[9],
                     'student' : user[10],
                     'patient' : user[11],
-                    'council_president' : user[12]
+                    'council_president' : user[12],
+                    'phones' : phones,
+                    'addres' : address
                 }
     else:
         cursor.execute("SELECT * FROM users WHERE id = %d" % id)
@@ -117,9 +125,18 @@ def put(id):
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "UPDATE users SET login='%s', password='%s', name='%s', cpf='%s', email='%s', birthday='%s', admin=%d, doctor=%d, nurse=%d, student=%d, patient=%d, council_president=%d" % (login, password, name, cpf, email, "{:%Y-%m-%d}".format(date), int(admin), int(doctor), int(nurse), int(student), int(patient), int(council)))
+            "UPDATE users SET login='%s', password='%s', name='%s', cpf='%s', email='%s', birthday='%s', admin=%d, doctor=%d, nurse=%d, student=%d, patient=%d, council_president=%d WHERE id = %d" % (login, password, name, cpf, email, "{:%Y-%m-%d}".format(date), int(admin), int(doctor), int(nurse), int(student), int(patient), int(council), id))
         res = {id: {
-            'name': name
+            'name': name,
+            'cpf' : cpf,
+            'email' : email,
+            'birthdate' : birthdate,
+            'admin' : admin,
+            'doctor' : doctor,
+            'nurse' : nurse,
+            'student' : student,
+            'patient' : patient,
+            'council_president' : council
         }}
         conn.commit()
     except:
