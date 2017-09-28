@@ -39,6 +39,15 @@ app.register_blueprint(locals_blueprint)
 from src.blueprints.historys import historys_blueprint
 app.register_blueprint(historys_blueprint)
 
+from src.blueprints.hospitalized import hospitalized_blueprint
+app.register_blueprint(hospitalized_blueprint)
+
+from src.blueprints.procedures import procedures_blueprint
+app.register_blueprint(procedures_blueprint)
+
+from src.blueprints.schedules import schedules_blueprint
+app.register_blueprint(schedules_blueprint)
+
 @app.route("/")
 @app.route('/home/')
 def home():
