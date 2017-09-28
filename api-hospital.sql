@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: 25-Set-2017 às 19:10
+-- Generation Time: 28-Set-2017 às 18:42
 -- Versão do servidor: 5.7.19-0ubuntu0.16.04.1
 -- PHP Version: 7.0.22-0ubuntu0.16.04.1
 
@@ -102,6 +102,13 @@ CREATE TABLE `hospitalized` (
   `patient_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Extraindo dados da tabela `hospitalized`
+--
+
+INSERT INTO `hospitalized` (`id`, `start_date`, `end_date`, `local_id`, `patient_id`) VALUES
+(1, '2011-12-18 13:17:17', '2011-12-25 13:17:17', 1, 10);
+
 -- --------------------------------------------------------
 
 --
@@ -175,6 +182,16 @@ CREATE TABLE `procedures` (
   `patient_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Extraindo dados da tabela `procedures`
+--
+
+INSERT INTO `procedures` (`id`, `type`, `date`, `local_id`, `patient_id`) VALUES
+(1, 'cirurgia do olho', '2011-12-18 13:17:17', 1, 10),
+(3, 'cirurgia cardiaca', '2011-12-18 13:17:17', 1, 10),
+(4, 'cirurgia cardiaca', '2011-12-18 13:17:17', 1, 10),
+(6, 'cirurgia cardiaca', '2011-12-18 13:17:17', 1, 10);
+
 -- --------------------------------------------------------
 
 --
@@ -184,13 +201,20 @@ CREATE TABLE `procedures` (
 CREATE TABLE `schedules` (
   `id` int(11) NOT NULL,
   `date` date NOT NULL,
-  `star_time` time NOT NULL,
+  `start_time` time NOT NULL,
   `end_time` time NOT NULL,
   `function` varchar(200) NOT NULL,
   `procedure_id` int(11) NOT NULL,
   `type_official` int(11) NOT NULL COMMENT '1=>doctor, 2=>nurse, 3=>student',
   `official_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Extraindo dados da tabela `schedules`
+--
+
+INSERT INTO `schedules` (`id`, `date`, `start_time`, `end_time`, `function`, `procedure_id`, `type_official`, `official_id`) VALUES
+(1, '2011-12-18', '13:17:17', '20:17:17', 'Realizar a cirurgia', 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -272,8 +296,8 @@ ALTER TABLE `history`
 --
 ALTER TABLE `hospitalized`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `hospitalized_local_fk` (`local_id`),
-  ADD KEY `hospitalized_user_fk` (`patient_id`);
+  ADD KEY `hospitalized_user_fk` (`patient_id`),
+  ADD KEY `hospitalized_local_fk` (`local_id`) USING BTREE;
 
 --
 -- Indexes for table `local`
@@ -300,16 +324,16 @@ ALTER TABLE `phones`
 --
 ALTER TABLE `procedures`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `procedure_lodal_fk` (`local_id`),
-  ADD UNIQUE KEY `procedure_patient_fk` (`patient_id`);
+  ADD KEY `procedure_lodal_fk` (`local_id`) USING BTREE,
+  ADD KEY `procedure_patient_fk` (`patient_id`) USING BTREE;
 
 --
 -- Indexes for table `schedules`
 --
 ALTER TABLE `schedules`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `schedule_procedure_fk` (`procedure_id`),
-  ADD KEY `official_users_fk` (`official_id`);
+  ADD KEY `official_users_fk` (`official_id`),
+  ADD KEY `schedule_procedure_fk` (`procedure_id`) USING BTREE;
 
 --
 -- Indexes for table `students`
@@ -347,7 +371,7 @@ ALTER TABLE `history`
 -- AUTO_INCREMENT for table `hospitalized`
 --
 ALTER TABLE `hospitalized`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `local`
 --
@@ -367,12 +391,12 @@ ALTER TABLE `phones`
 -- AUTO_INCREMENT for table `procedures`
 --
 ALTER TABLE `procedures`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `schedules`
 --
 ALTER TABLE `schedules`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `students`
 --
